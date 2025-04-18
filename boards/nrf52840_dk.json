@@ -42,6 +42,6 @@
     "protocol": "jlink",
     "protocols": ["jlink", "nrfjprog", "stlink"]
   },
-  "url": "https://meshtastic.org/",
+  "url": "https://terrasense.org/",
   "vendor": "Nordic Semi"
 }

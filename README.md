@@ -1,6 +1,5 @@
 <div align="center" markdown="1">
 
-<img src=".github/meshtastic_logo.png" alt="Meshtastic Logo" width="80"/>
 <h1>Meshtastic Firmware</h1>
 
 ![GitHub release downloads](https://img.shields.io/github/downloads/meshtastic/firmware/total)

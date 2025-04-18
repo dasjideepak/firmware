@@ -2,19 +2,19 @@
 <component type="desktop-application">
   <id>org.meshtastic.meshtasticd</id>
 
-  <name>Meshtastic</name>
+  <name>TerreSense</name>
   <summary>Decentralized mesh communication</summary>
 
   <metadata_license>CC-BY-4.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
-  <developer id="org.meshtastic">
-    <name>Meshtastic</name>
+  <developer id="org.terrasense">
+    <name>TerreSense</name>
   </developer>
 
   <description>
     <p>
-      Meshtastic is an open source project for creating off-grid, affordable, and resilient communication with LoRa mesh networks.
+      TerreSense is an open source project for creating off-grid, affordable, and resilient communication with LoRa mesh networks.
     </p>
   </description>
 
@@ -49,11 +49,11 @@
     <content_attribute id="social-location">intense</content_attribute>
   </content_rating>
 
-  <url type="bugtracker">https://github.com/meshtastic/firmware/issues</url>
-  <url type="homepage">https://meshtastic.org/</url>
-  <url type="donation">https://opencollective.com/meshtastic</url>
-  <url type="faq">https://meshtastic.org/docs/software/linux/usage/</url>
-  <url type="vcs-browser">https://github.com/meshtastic/firmware/</url>
+  <url type="bugtracker">https://github.com/terrasense/firmware/issues</url>
+  <url type="homepage">https://terrasense.org/</url>
+  <url type="donation">https://opencollective.com/terrasense</url>
+  <url type="faq">https://terrasense.org/docs/software/linux/usage/</url>
+  <url type="vcs-browser">https://github.com/terrasense/firmware/</url>
 
   <screenshots>
     <screenshot type="default">
@@ -88,13 +88,13 @@
 
   <releases>
     <release version="2.6.6">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.6</url>
+      <url type="details">https://github.com/terrasense/firmware/releases?q=tag%3Av2.6.6</url>
     </release>
     <release version="2.6.5" date="2025-04-09">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.5</url>
+      <url type="details">https://github.com/terrasense/firmware/releases?q=tag%3Av2.6.5</url>
     </release>
     <release version="2.6.4" date="2025-03-29">
-      <url type="details">https://github.com/meshtastic/firmware/releases?q=tag%3Av2.6.4</url>
+      <url type="details">https://github.com/terrasense/firmware/releases?q=tag%3Av2.6.4</url>
     </release>
   </releases>
 </component>
