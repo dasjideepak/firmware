@@ -35,6 +35,7 @@ class LogoApplet : public SystemApplet, public concurrency::OSThread
     std::string textTitle;
     AppletFont fontTitle;
     bool inverted = false; // Invert colors. Used during shutdown, to restore display health.
+    bool drawCustomLogo = false; // Set to true to use the original logo drawing method, false for a simple rectangle
 };
 
 } // namespace NicheGraphics::InkHUD

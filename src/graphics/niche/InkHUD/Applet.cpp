@@ -766,51 +766,40 @@ uint16_t InkHUD::Applet::getHeaderHeight()
     return headerDivY + 1; // "Plus one": height is always one more than Y position
 }
 
-// "Scale to fit": width of Meshtastic logo to fit given region, maintaining aspect ratio
+// "Scale to fit": width of logo to fit given region, maintaining aspect ratio
 uint16_t InkHUD::Applet::getLogoWidth(uint16_t limitWidth, uint16_t limitHeight)
 {
-    // Determine whether we're limited by width or height
     // Makes sure we draw the logo as large as possible, within the specified region,
-    // while still maintaining correct aspect ratio
+    // maintaining aspect ratio
     if (limitWidth > limitHeight * LOGO_ASPECT_RATIO)
         return limitHeight * LOGO_ASPECT_RATIO;
     else
         return limitWidth;
 }
 
-// "Scale to fit": height of Meshtastic logo to fit given region, maintaining aspect ratio
+// "Scale to fit": height of logo to fit given region, maintaining aspect ratio
 uint16_t InkHUD::Applet::getLogoHeight(uint16_t limitWidth, uint16_t limitHeight)
 {
-    // Determine whether we're limited by width or height
     // Makes sure we draw the logo as large as possible, within the specified region,
-    // while still maintaining correct aspect ratio
+    // maintaining aspect ratio
     if (limitHeight > limitWidth / LOGO_ASPECT_RATIO)
         return limitWidth / LOGO_ASPECT_RATIO;
     else
         return limitHeight;
 }
 
-// Draw a scalable Meshtastic logo
-// Make sure to provide dimensions which have the correct aspect ratio (~2)
-// Three paths, drawn thick using quads, with one corner "radiused"
-/*
-        -        ^
-       /-       /-\
-      //       // \\
-     //       //   \\
-    //       //     \\
-   //       //       \\
-
-*/
+// Draw a scalable custom logo
+// Generates a simplified logo with straight lines
 void InkHUD::Applet::drawLogo(int16_t centerX, int16_t centerY, uint16_t width, uint16_t height, Color color)
 {
-    struct Point {
-        int x;
-        int y;
-    };
-    typedef Point Distance;
+    if (width < 10 || height < 10)
+        return; // don't attempt to draw tiny logos
 
-    int16_t logoTh = width * 0.068; // Thickness scales with width. Measured from logo at meshtastic.org.
+    // Set drawing color
+    display->setColor(color);
+
+    // Calculate dimensions for the logo
+    int16_t logoTh = width * 0.068; // Thickness scales with width
     int16_t logoL = centerX - (width / 2) + (logoTh / 2);
     int16_t logoT = centerY - (height / 2) + (logoTh / 2);
     int16_t logoW = width - logoTh;
@@ -818,134 +807,15 @@ void InkHUD::Applet::drawLogo(int16_t centerX, int16_t centerY, uint16_t width, 
     int16_t logoR = logoL + logoW - 1;
     int16_t logoB = logoT + logoH - 1;
 
-    // Points for paths (a, b, and c)
-    /*
-      +-----------------------------+
-    --|          a2       b2/c1     |
-      |                             |
-      |                             |
-      |                             |
-    --|  a1      b1              c2 |
-      +-----------------------------+
-         |       |       |       |
-    */
+    // Draw a diamond shape
+    display->drawLine(logoL, centerY, centerX, logoT);
+    display->drawLine(centerX, logoT, logoR, centerY);
+    display->drawLine(logoR, centerY, centerX, logoB);
+    display->drawLine(centerX, logoB, logoL, centerY);
 
-    Point a1 = {map(0, 0, 3, logoL, logoR), logoB};
-    Point a2 = {map(1, 0, 3, logoL, logoR), logoT};
-    Point b1 = {map(1, 0, 3, logoL, logoR), logoB};
-    Point b2 = {map(2, 0, 3, logoL, logoR), logoT};
-    Point c1 = {map(2, 0, 3, logoL, logoR), logoT};
-    Point c2 = {map(3, 0, 3, logoL, logoR), logoB};
-
-    // Find angle of the path(s)
-    // Used to thicken the single pixel paths
-    /*
-    +-------------------------------+
-    |             a2                |
-    |            -|                 |
-    |          -/ |                 |
-    |        -/   |                 |
-    |      -/#    |                 |
-    |    -/   #   |                 |
-    |   /     #   |                 |
-    |  a1----------                 |
-    +-------------------------------+
-    */
-
-    Distance deltaA = {abs(a2.x - a1.x), abs(a2.y - a1.y)};
-    float angle = tanh((float)deltaA.y / deltaA.x);
-
-    // Distance (at right angle to the paths), which will give corners for our "quads"
-    // The distance is unsigned. We will vary the signedness of the x and y components to suit the path and corner
-    /*
-    |                             a2
-    |                            .
-    |                          ..
-    |          aq1           ..
-    |            #         ..
-    |            | #     ..
-    |fromPath.y  |   # ..
-    |            +----a1
-    |
-    |          fromPath.x
-    +--------------------------------
-    */
-
-    Distance fromPath;
-    fromPath.x = cos(radians(90) - angle) * logoTh * 0.5;
-    fromPath.y = sin(radians(90) - angle) * logoTh * 0.5;
-
-    // Make the paths thick
-    // Corner points for the rectangles (quads):
-    /*
-
-          aq2
-               a2
-               /    aq3
-              /
-             /
-     aq1    /
-          a1
-                aq3
-    */
-
-    // Filled as two triangles per quad:
-    /*
-                  aq2 #
-                 #     ###
-               ##         # aq3
-             ##       ###   -
-           ##     ####    -/
-         ##    ###      -/
-       ##  ####       -/
-     aq1 ##         -/
-        ---       -/
-           \---aq4
-    */
-
-    // Make the path thick: path a becomes quad a
-    Point aq1{a1.x - fromPath.x, a1.y - fromPath.y};
-    Point aq2{a2.x - fromPath.x, a2.y - fromPath.y};
-    Point aq3{a2.x + fromPath.x, a2.y + fromPath.y};
-    Point aq4{a1.x + fromPath.x, a1.y + fromPath.y};
-    fillTriangle(aq1.x, aq1.y, aq2.x, aq2.y, aq3.x, aq3.y, color);
-    fillTriangle(aq1.x, aq1.y, aq3.x, aq3.y, aq4.x, aq4.y, color);
-
-    // Make the path thick: path b becomes quad b
-    Point bq1{b1.x - fromPath.x, b1.y - fromPath.y};
-    Point bq2{b2.x - fromPath.x, b2.y - fromPath.y};
-    Point bq3{b2.x + fromPath.x, b2.y + fromPath.y};
-    Point bq4{b1.x + fromPath.x, b1.y + fromPath.y};
-    fillTriangle(bq1.x, bq1.y, bq2.x, bq2.y, bq3.x, bq3.y, color);
-    fillTriangle(bq1.x, bq1.y, bq3.x, bq3.y, bq4.x, bq4.y, color);
-
-    // Make the path thick: path c becomes quad c
-    Point cq1{c1.x - fromPath.x, c1.y + fromPath.y};
-    Point cq2{c2.x - fromPath.x, c2.y + fromPath.y};
-    Point cq3{c2.x + fromPath.x, c2.y - fromPath.y};
-    Point cq4{c1.x + fromPath.x, c1.y - fromPath.y};
-    fillTriangle(cq1.x, cq1.y, cq2.x, cq2.y, cq3.x, cq3.y, color);
-    fillTriangle(cq1.x, cq1.y, cq3.x, cq3.y, cq4.x, cq4.y, color);
-
-    // Radius the intersection of quad b and quad c
-    /*
-       b2 / c1
-              ####
-           ##      ##
-          /          \
-         /     \/     \
-        /      /\      \
-       /      /  \      \
-
-    */
-
-    // Don't attempt if logo is tiny
-    if (logoTh > 3) {
-        // The radius for the cap *should* be the same as logoTh, but it's not, due to accumulated rounding
-        // We get better results just re-deriving it
-        int16_t capRad = sqrt(pow(fromPath.x, 2) + pow(fromPath.y, 2));
-        fillCircle(b2.x, b2.y, capRad, color);
-    }
+    // Draw a cross inside the diamond
+    display->drawLine(logoL, centerY, logoR, centerY);
+    display->drawLine(centerX, logoT, centerX, logoB);
 }
 
 #endif

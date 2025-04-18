@@ -125,13 +125,13 @@ class Applet : public GFX
     void hatchRegion(int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t spacing, Color color); // Fill with sparse lines
     void drawHeader(std::string text); // Draw the standard applet header
 
-    // Meshtastic Logo
+    // Logo
 
-    static constexpr float LOGO_ASPECT_RATIO = 1.9;                    // Width:Height for drawing the Meshtastic logo
-    uint16_t getLogoWidth(uint16_t limitWidth, uint16_t limitHeight);  // Size Meshtastic logo to fit within region
-    uint16_t getLogoHeight(uint16_t limitWidth, uint16_t limitHeight); // Size Meshtastic logo to fit within region
+    static constexpr float LOGO_ASPECT_RATIO = 1.9;                    // Width:Height for drawing the logo
+    uint16_t getLogoWidth(uint16_t limitWidth, uint16_t limitHeight);  // Size logo to fit within region
+    uint16_t getLogoHeight(uint16_t limitWidth, uint16_t limitHeight); // Size logo to fit within region
     void drawLogo(int16_t centerX, int16_t centerY, uint16_t width, uint16_t height,
-                  Color color = BLACK); // Draw the Meshtastic logo
+                  Color color = BLACK); // Draw the logo
 
     std::string hexifyNodeNum(NodeNum num);                  // Style as !0123abdc
     SignalStrength getSignalStrength(float snr, float rssi); // Interpret SNR and RSSI, as an easy to understand value

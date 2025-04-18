@@ -17,7 +17,7 @@ InkHUD::LogoApplet::LogoApplet() : concurrency::OSThread("LogoApplet")
         fontTitle = fontLarge;
         textLeft = xstr(APP_VERSION_SHORT);
         textRight = owner.short_name;
-        textTitle = "Meshtastic";
+        textTitle = "Terrasense"; // Removed Meshtastic reference
     } else {
         fontTitle = fontSmall;
         textLeft = "";
@@ -51,7 +51,12 @@ void InkHUD::LogoApplet::onRender()
         setTextColor(WHITE);
     }
 
-    drawLogo(logoCX, logoCY, logoW, logoH, inverted ? WHITE : BLACK);
+    // Draw a simple rectangle instead of the Meshtastic logo
+    if (!drawCustomLogo) {
+        display->drawRect(logoCX - logoW/2, logoCY - logoH/2, logoW, logoH, inverted ? WHITE : BLACK);
+    } else {
+        drawLogo(logoCX, logoCY, logoW, logoH, inverted ? WHITE : BLACK);
+    }
 
     if (!textLeft.empty()) {
         setFont(fontSmall);

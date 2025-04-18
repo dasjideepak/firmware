@@ -145,32 +145,20 @@ void InkHUD::TipsApplet::renderWelcome()
 {
     uint16_t padW = X(0.05);
 
-    // Block 1 - logo & title
+    // Block 1 - title (removed logo)
     // ========================
 
-    // Logo size
-    uint16_t logoWLimit = X(0.3);
-    uint16_t logoHLimit = Y(0.3);
-    uint16_t logoW = getLogoWidth(logoWLimit, logoHLimit);
-    uint16_t logoH = getLogoHeight(logoWLimit, logoHLimit);
-
-    // Title size
-    setFont(fontLarge);
-    std::string title;
-    if (width() >= 200) // Future proofing: hide if *tiny* display
-        title = "terrasense.org";
-    uint16_t titleW = getTextWidth(title);
-
-    // Center the block
-    // Desired effect: equal margin from display edge for logo left and title right
-    int16_t block1Y = Y(0.3);
-    int16_t block1CX = X(0.5) + (logoW / 2) - (titleW / 2);
-    int16_t logoCX = block1CX - (logoW / 2) - (padW / 2);
-    int16_t titleCX = block1CX + (titleW / 2) + (padW / 2);
-
-    // Draw block
-    drawLogo(logoCX, block1Y, logoW, logoH);
-    printAt(titleCX, block1Y, title, CENTER, MIDDLE);
+    // Title
+    int16_t block1Y = Y(0.22);
+    setFont(fontXLarge);
+    int16_t titleW = display->getStringWidth(xstr(APP_VERSION_SHORT));
+    // Removed logo size calculation here
+    
+    // Desired effect: center the title
+    int16_t block1CX = X(0.5);
+    
+    // Draw the title
+    printAt(block1CX, block1Y, xstr(APP_VERSION_SHORT), CENTER, TOP);
 
     // Block 2 - subtitle
     // =======================
